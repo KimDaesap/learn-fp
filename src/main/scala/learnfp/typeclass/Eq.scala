@@ -26,11 +26,11 @@ object EqInstances {
   }
 
   implicit def listEqInstance[A](implicit eqt:Eq[A]) = new Eq[List[A]] {
-    import EqOps._
     override def eq(lhs: List[A], rhs: List[A]): Boolean = (lhs, rhs) match {
       case (lh :: lt, rh :: rt) =>
-        if (lh ==== rh) eq(lt, rt)
-        else Eq.eq(lh, rh)
+        val isEqual = eqt.eq(lh, rh)
+        if (isEqual) eq(lt, rt)
+        else isEqual
       case (Nil, Nil) => true
       case _ => false
     }
